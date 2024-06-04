@@ -3,7 +3,6 @@
 # Write your code to expect a terminal of 80 characters wide and 24 rows high
 import gspread
 from google.oauth2.service_account import Credentials
-from pprint import pprint
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -25,7 +24,7 @@ def get_sales_data():
         print("Data should be six number, sperated by commas.")
         print("Example: 10,20,30,40,50,60\n")
 
-        data_str = input ("Enter your data here: ")
+        data_str = input ("Enter your data here:\n")
         
         sales_data = data_str.split(",")
         validate_data(sales_data)
@@ -85,6 +84,22 @@ def get_last_5_entries_sales():
         columns.append(column[-5:])
     return columns
 
+def  calculate_stock_data(data):
+    """
+    calc
+    """
+    print("Calculating stock data...\n")
+    new_stock_data = []
+
+    for column in data:
+        int_column = [int(num) for num in column]
+        average = sum(int_column) / len(int_column)
+        stock_num = average * 1.1
+        new_stock_data.append(round(stock_num))
+    
+    return new_stock_data
+
+
 def main():
     """
     Run all program functions
@@ -94,7 +109,9 @@ def main():
     update_worksheet(sales_data,"sales")
     new_surpluse_data = calculate_surplus_data(sales_data)
     update_worksheet(new_surpluse_data,"surplus")
+    sales_columns = get_last_5_entries_sales()
+    stock_data = calculate_stock_data(sales_columns)
+    update_worksheet(stock_data,"stock")
 
 print("Welcome to Love Sandwhiches Data Automation")
-#main()
-sales_columns = get_last_5_entries_sales()
+main()
